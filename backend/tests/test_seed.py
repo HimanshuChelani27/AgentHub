@@ -39,3 +39,12 @@ def test_seed_is_idempotent(session):
     before = counts()
     seed(session, get_settings())
     assert counts() == before
+
+
+def test_generated_crew_key_gets_key_prefix():
+    # Hosting platforms generate secrets without the "ah_" prefix that marks an API key.
+    from app.config import Settings
+
+    settings = Settings(crew_api_key="Zx9-generated-secret")
+    assert settings.crew_api_key == "ah_Zx9-generated-secret"
+    assert Settings(crew_api_key="ah_already").crew_api_key == "ah_already"

@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     demo_password: str = "demo"
     # Raw key the bundled Research Crew uses to authenticate to the gateway.
     crew_api_key: str = "ah_demo_research_crew_key"
+
+    @field_validator("crew_api_key")
+    @classmethod
+    def _key_prefix(cls, v: str) -> str:
+        # API keys are recognised by their "ah_" prefix; a generated secret (e.g. Render's) has none.
+        return v if v.startswith("ah_") else "ah_" + v
 
     # Registering a stdio MCP server makes the backend execute a command. Off by default so a
     # public deployment can't be turned into remote code execution; seeded servers are unaffected.

@@ -1,0 +1,30 @@
+# Render blueprint for the API (free plan, Docker). The dashboard deploys to Vercel from frontend/.
+services:
+  - type: web
+    name: agenthub-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8000"
+      # Demo mode resets and reseeds the database on every start and adds the read-only demo/demo login.
+      - key: AGENTHUB_DEMO_MODE
+        value: "true"
+      - key: AGENTHUB_JWT_SECRET
+        generateValue: true
+      # The admin account can edit policies; keep its password private.
+      - key: AGENTHUB_ADMIN_PASSWORD
+        generateValue: true
+      # The Research Crew's gateway key; the default in config.py is public, so replace it.
+      - key: AGENTHUB_CREW_API_KEY
+        generateValue: true
+      - key: AGENTHUB_CORS_ORIGINS
+        value: '["https://agenthub-demo.vercel.app","http://localhost:4200"]'
+      # Optional: any one of these switches the crew from scripted to LLM-written output.
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

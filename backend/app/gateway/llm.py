@@ -36,7 +36,7 @@ class Provider:
 
 DEFAULT_MODELS = {
     "anthropic": "claude-haiku-5-5",
-    "google": "gemini-2.5-flash",
+    "google": "gemini-flash-lite-latest",
     "groq": "llama-3.3-70b-versatile",
     "openai": "gpt-4o-mini",
     "ollama": "llama3.2",
